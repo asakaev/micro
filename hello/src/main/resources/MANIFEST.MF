@@ -1,0 +1,6 @@
+MIDlet-Name: Hello
+MIDlet-Version: 0.0.1
+MIDlet-Vendor: io.github.asakaev
+MIDlet-1: Hello, empty.png, io.github.asakaev.micro.Hello
+MicroEdition-Configuration: CLDC-1.0
+MicroEdition-Profile: MIDP-1.0

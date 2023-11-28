@@ -1,4 +1,4 @@
-package io.github.asakaev
+package io.github.asakaev.micro
 
 import javax.microedition.lcdui.{Display, Form}
 import javax.microedition.midlet.MIDlet

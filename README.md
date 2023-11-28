@@ -2,6 +2,9 @@
 
 Scala on Java Platform, Micro Edition, PoC.
 
+### Prerequisites
+Java 1.6
+
 ## fraud
 
 Missing Java classes in CLDC and MIDP needed to compile Scala.
@@ -13,5 +16,6 @@ Missing Java classes in CLDC and MIDP needed to compile Scala.
 
 MIDlet application.
 ```shell
-./do.sh hello_compile
+./do.sh clean
+./do.sh hello_build
 ```
