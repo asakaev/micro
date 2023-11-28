@@ -4,10 +4,13 @@
 
 set -e -u # -e "Automatic exit from bash shell script on error"  -u "Treat unset variables and parameters as errors"
 
+# env
+scala_dir=~/toolchain/scala-2.6.1-final
+scala_bin=$scala_dir/bin
+dir=$PWD
+
 fraud_compile() {
   # env
-  scala_bin=~/toolchain/scala-2.6.1-final/bin
-  dir=$PWD
   output="$dir/fraud/target/classes"
 
   # scan sources
@@ -24,6 +27,34 @@ fraud_compile() {
   -verbose \
   -target:jvm-1.4 \
   -extdirs /var/empty \
+  -d "$output" \
+  $sources
+}
+
+hello_compile() {
+  # env
+  cldc_jar=~/toolchain/jdk/cldc_1.0.jar
+  midp_jar=~/toolchain/jdk/midp_1.0.jar
+  scala_lib_jar=$scala_dir/share/scala/lib/scala-library.jar
+  fraud_classes="$dir/fraud/target/classes"
+  output="$dir/hello/target/classes"
+
+  # scan sources
+  sources=$(find "$dir"/hello -name '*.scala')
+
+  # create classes directory
+  mkdir -p "$output"
+
+  # remove compiled classes
+  rm -rf "${output:?}/*"
+
+  # compile
+  $scala_bin/scalac \
+  -verbose \
+  -target:jvm-1.4 \
+  -bootclasspath $cldc_jar:$midp_jar:$scala_lib_jar \
+  -extdirs /var/empty \
+  -classpath "$fraud_classes" \
   -d "$output" \
   $sources
 }
