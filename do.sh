@@ -60,26 +60,46 @@ hello_compile() {
   $sources
 }
 
-hello_assembly() {
+all_preverify() {
   # env
-  tmp="$dir/hello/target/tmp"
-  manifest="$dir/hello/src/main/resources/MANIFEST.MF"
-  jar_dir="$dir/hello/target/jar"
+  preverify=~/toolchain/preverify
+  bundle="$dir/hello/target/bundle"
+  preverified="$dir/hello/target/preverified"
 
-  # prepare tmp directory
-  mkdir -p "$tmp"
-  rm -rfv "${tmp:?}/"*
-
-  # extract scala-library classes
-  unzip $scala_lib_jar -d "$tmp"
-
-  # remove scala-library junk
-  rm -fv "$tmp/library.properties"
-  rm -rfv "$tmp/META-INF"
+  # prepare bundle directory
+  mkdir -p "$bundle"
+  rm -rfv "${bundle:?}/"*
 
   # copy fraud and hello classes
-  cp -r "$fraud_classes/." "$tmp"
-  cp -r "$hello_classes/." "$tmp"
+  cp -r "$fraud_classes/." "$bundle"
+  cp -r "$hello_classes/." "$bundle"
+
+  # extract scala-library classes
+  unzip $scala_lib_jar -d "$bundle"
+
+  # remove scala-library junk
+  rm -fv "$bundle/library.properties"
+  rm -rfv "$bundle/META-INF"
+
+  # strip scala-library because of preverify errors
+  rm -rfv "$bundle/scala/xml"*
+  rm -rfv "$bundle/scala/testing"*
+  rm -rfv "$bundle/scala/mobile"*
+  rm -rfv "$bundle/scala/actors"*
+
+  # prepare preverified directory
+  mkdir -p "$preverified"
+  rm -rfv "${preverified:?}/"*
+
+  # preverify
+  $preverify -classpath $cldc_jar:$midp_jar -d "$preverified" "$bundle"
+}
+
+hello_assembly() {
+  # env
+  preverified="$dir/hello/target/preverified"
+  manifest="$dir/hello/src/main/resources/MANIFEST.MF"
+  jar_dir="$dir/hello/target/jar"
 
   # prepare jar directory
   mkdir -p "$jar_dir"
@@ -90,11 +110,11 @@ hello_assembly() {
   filename="hello-$git_hash.jar"
 
   # create jar
-  jar cvfm "$jar_dir/$filename" "$manifest" -C "$tmp" .
+  jar cvfm "$jar_dir/$filename" "$manifest" -C "$preverified" .
 }
 
 hello_build() {
-  fraud_compile && hello_compile && hello_assembly
+  fraud_compile && hello_compile && all_preverify && hello_assembly
 }
 
 hello_clean() {
