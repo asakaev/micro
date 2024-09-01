@@ -1,3 +1,3 @@
 package java.lang
 
-trait InheritableThreadLocal
+class InheritableThreadLocal extends ThreadLocal
