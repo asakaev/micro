@@ -39,7 +39,7 @@ fraud_clean() {
 
 hello_compile() {
   # env
-  cldc_jar=~/toolchain/jdk/cldc_1.0.jar
+  cldc_jar=~/toolchain/jdk/cldc_1.1.jar
   midp_jar=~/toolchain/jdk/midp_1.0.jar
 
   # scan sources
