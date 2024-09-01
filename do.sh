@@ -41,6 +41,7 @@ hello_compile() {
   # env
   cldc_jar=~/toolchain/jdk/cldc_1.1.jar
   midp_jar=~/toolchain/jdk/midp_1.0.jar
+  jdk_jar=/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/classes.jar:/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/ui.jar:/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/jsse.jar:/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/jce.jar:/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/charsets.jar
 
   # scan sources
   sources=$(find "$dir"/hello -name '*.scala')
@@ -74,18 +75,27 @@ all_preverify() {
   cp -r "$fraud_classes/." "$bundle"
   cp -r "$hello_classes/." "$bundle"
 
-  # extract scala-library classes
-  unzip $scala_lib_jar -d "$bundle"
+  # extract scala-library classes (no overwrite)
+#  unzip -n $scala_lib_jar -d "$bundle"
 
   # remove scala-library junk
   rm -fv "$bundle/library.properties"
   rm -rfv "$bundle/META-INF"
 
-  # strip scala-library because of preverify errors
-  rm -rfv "$bundle/scala/xml"*
-  rm -rfv "$bundle/scala/testing"*
-  rm -rfv "$bundle/scala/mobile"*
-  rm -rfv "$bundle/scala/actors"*
+#  # strip scala-library because of preverify errors
+#  rm -rfv "$bundle/scala/xml"*
+#  rm -rfv "$bundle/scala/testing"*
+#  rm -rfv "$bundle/scala/mobile"*
+#  rm -rfv "$bundle/scala/actors"*
+#  rm -rfv "$bundle/scala/ref"*
+#  rm -rfv "$bundle/scala/util"*
+#  rm -rfv "$bundle/scala/text"*
+#
+#  # fix bb runtime error System.in
+#  rm -v "$bundle/scala/Console.class"
+#  rm -v "$bundle/scala/Console$.class"
+
+  # TODO: fix bb runtime errors: Object.clone, String.lastIndexOf
 
   # prepare preverified directory
   mkdir -p "$preverified"

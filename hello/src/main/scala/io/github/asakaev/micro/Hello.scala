@@ -14,7 +14,7 @@ final class Hello() extends MIDlet {
   def startApp(): Unit = {
     val form = new Form("It's alive!")
     val m = Message("Scala 2.6.1", "JVM 1.3")
-    form.append(m.toString)
+    form.append(m.scala) // TODO: toString not working, String.lastIndexOf
     val display = Display.getDisplay(this)
     display.setCurrent(form)
   }
